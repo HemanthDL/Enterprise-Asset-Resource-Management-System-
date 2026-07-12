@@ -57,7 +57,7 @@ export default function DepartmentTab() {
 
   const fetchEmployees = async () => {
     try {
-      const res = await usersAPI.list({ limit: 200 });
+      const res = await usersAPI.list({ limit: 100 });
       setEmployees(res.data.items || []);
     } catch (error) {
       console.error('Failed to fetch employees:', error);

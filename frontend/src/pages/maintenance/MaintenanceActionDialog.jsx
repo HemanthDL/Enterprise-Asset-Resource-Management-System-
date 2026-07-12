@@ -40,7 +40,7 @@ export default function MaintenanceActionDialog({ request, open, onOpenChange, o
       } else if (status === 'approved' || status === 'assigned') {
         setActionType('assign');
         // Load technicians/employees
-        usersAPI.list({ limit: 200 }).then((res) => {
+        usersAPI.list({ limit: 100 }).then((res) => {
           setEmployees(res.data.items || []);
         }).catch(console.error);
       } else if (status === 'in_progress') {

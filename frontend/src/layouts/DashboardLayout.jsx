@@ -18,7 +18,6 @@ import {
   Moon,
   Sun,
   Menu,
-  Activity,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -65,7 +64,6 @@ export default function DashboardLayout() {
     { name: 'Maintenance', path: '/maintenance', icon: Wrench, show: true },
     { name: 'Audits', path: '/audits', icon: ClipboardCheck, show: isAdmin() || isAssetManager() },
     { name: 'Reports', path: '/reports', icon: BarChart3, show: isAdmin() || isAssetManager() || isDepartmentHead() },
-    { name: 'Activity Logs', path: '/activity-logs', icon: Activity, show: isAdmin() },
   ];
 
   const getInitials = (firstName, lastName) => {

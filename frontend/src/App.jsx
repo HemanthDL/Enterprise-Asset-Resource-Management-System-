@@ -21,8 +21,8 @@ import BookingsPage from '@/pages/bookings/BookingsPage';
 import MaintenancePage from '@/pages/maintenance/MaintenancePage';
 import AuditsPage from '@/pages/audits/AuditsPage';
 import ReportsPage from '@/pages/reports/ReportsPage';
-import ActivityLogsPage from '@/pages/activity-logs/ActivityLogsPage';
 import NotificationsPage from '@/pages/notifications/NotificationsPage';
+import NotFoundPage from '@/pages/NotFoundPage';
 
 export default function App() {
   return (
@@ -40,11 +40,11 @@ export default function App() {
             <Route element={<ProtectedRoute />}>
               <Route element={<DashboardLayout />}>
                 <Route path="/" element={<DashboardPage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
                 
                 {/* Admin Only Route */}
                 <Route element={<RoleRoute roles={['admin']} />}>
                   <Route path="/organization" element={<OrganizationPage />} />
-                  <Route path="/activity-logs" element={<ActivityLogsPage />} />
                 </Route>
 
                 {/* Admin and Asset Manager Routes */}
@@ -65,7 +65,7 @@ export default function App() {
                 <Route path="/notifications" element={<NotificationsPage />} />
 
                 {/* Catch-all redirect */}
-                <Route path="*" element={<Navigate to="/" replace />} />
+                <Route path="*" element={<NotFoundPage />} />
               </Route>
             </Route>
           </Routes>

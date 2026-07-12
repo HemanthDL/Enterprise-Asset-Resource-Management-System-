@@ -39,7 +39,7 @@ export default function RaiseMaintenanceDialog({ open, onOpenChange, onSuccess }
   useEffect(() => {
     if (open) {
       // Fetch assets
-      assetsAPI.list({ limit: 200 }).then((res) => {
+      assetsAPI.list({ limit: 100 }).then((res) => {
         let items = res.data.items || [];
         if (isEmployee) {
           items = items.filter((a) => a.current_holder === user?.id);
