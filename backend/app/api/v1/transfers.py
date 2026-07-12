@@ -4,7 +4,7 @@ Transfer routes — request, approve, reject, complete.
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_db
@@ -48,7 +48,7 @@ async def request_transfer(
 @router.patch("/{transfer_id}/approve", response_model=TransferResponse, summary="Approve transfer")
 async def approve_transfer(
     transfer_id: UUID,
-    data: TransferApproval | None = None,
+    data: TransferApproval | None = Body(None),
     current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER, RoleEnum.DEPARTMENT_HEAD)),
     db: AsyncSession = Depends(get_db),
 ):
@@ -62,7 +62,7 @@ async def approve_transfer(
 @router.patch("/{transfer_id}/reject", response_model=TransferResponse, summary="Reject transfer")
 async def reject_transfer(
     transfer_id: UUID,
-    data: TransferApproval | None = None,
+    data: TransferApproval | None = Body(None),
     current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER, RoleEnum.DEPARTMENT_HEAD)),
     db: AsyncSession = Depends(get_db),
 ):

@@ -109,3 +109,15 @@ async def get_discrepancy_report(
     """Auto-generated discrepancy report for flagged items."""
     service = AuditService(db)
     return await service.get_discrepancy_report(cycle_id)
+
+
+@router.get("/{cycle_id}/assets", response_model=list[AuditAssetResponse], summary="List assets in cycle")
+async def list_cycle_assets(
+    cycle_id: UUID,
+    current_user: User = Depends(require_roles(RoleEnum.ADMIN, RoleEnum.ASSET_MANAGER)),
+    db: AsyncSession = Depends(get_db),
+):
+    """List all assets assigned to an audit cycle."""
+    service = AuditService(db)
+    assets = await service.audit_repo.get_audit_assets(cycle_id)
+    return [service._audit_asset_response(a) for a in assets]

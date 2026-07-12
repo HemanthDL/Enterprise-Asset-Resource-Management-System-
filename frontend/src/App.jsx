@@ -14,17 +14,15 @@ import { ProtectedRoute, RoleRoute } from '@/components/guards';
 import LoginPage from '@/pages/auth/LoginPage';
 import SignupPage from '@/pages/auth/SignupPage';
 import DashboardPage from '@/pages/dashboard/DashboardPage';
-
-// Placeholder Pages (To be implemented)
-const OrganizationPage = () => <div className="p-8"><h1 className="text-2xl font-bold">Organization Setup</h1><p>Admin only</p></div>;
-const AssetsPage = () => <div className="p-8"><h1 className="text-2xl font-bold">Assets Directory</h1></div>;
-const AllocationsPage = () => <div className="p-8"><h1 className="text-2xl font-bold">Allocations & Transfers</h1></div>;
-const BookingsPage = () => <div className="p-8"><h1 className="text-2xl font-bold">Resource Bookings</h1></div>;
-const MaintenancePage = () => <div className="p-8"><h1 className="text-2xl font-bold">Maintenance</h1></div>;
-const AuditsPage = () => <div className="p-8"><h1 className="text-2xl font-bold">Audits</h1></div>;
-const ReportsPage = () => <div className="p-8"><h1 className="text-2xl font-bold">Reports</h1></div>;
-const NotificationsPage = () => <div className="p-8"><h1 className="text-2xl font-bold">Notifications</h1></div>;
-const ActivityLogsPage = () => <div className="p-8"><h1 className="text-2xl font-bold">Activity Logs</h1></div>;
+import OrganizationPage from '@/pages/organization/OrganizationPage';
+import AssetsPage from '@/pages/assets/AssetsPage';
+import AllocationsPage from '@/pages/allocations/AllocationsPage';
+import BookingsPage from '@/pages/bookings/BookingsPage';
+import MaintenancePage from '@/pages/maintenance/MaintenancePage';
+import AuditsPage from '@/pages/audits/AuditsPage';
+import ReportsPage from '@/pages/reports/ReportsPage';
+import ActivityLogsPage from '@/pages/activity-logs/ActivityLogsPage';
+import NotificationsPage from '@/pages/notifications/NotificationsPage';
 
 export default function App() {
   return (
@@ -72,7 +70,7 @@ export default function App() {
             </Route>
           </Routes>
         </Router>
-        <Toaster richColors position="top-right" />
+        <Toaster richColors position="top-right" closeButton />
       </AuthProvider>
     </ThemeProvider>
   );

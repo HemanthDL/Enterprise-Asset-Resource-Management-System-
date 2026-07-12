@@ -18,21 +18,27 @@ import {
 import { format } from 'date-fns';
 
 export default function DashboardPage() {
-  const { isAssetManager, isAdmin } = useAuth();
+  const { isAssetManager, isAdmin, isDepartmentHead } = useAuth();
   const navigate = useNavigate();
   const [kpis, setKpis] = useState(null);
   const [overdueReturns, setOverdueReturns] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const canViewOverdue = isAdmin() || isAssetManager() || isDepartmentHead();
+
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
-        const [kpiRes, overdueRes] = await Promise.all([
-          dashboardAPI.getKPIs(),
-          dashboardAPI.getOverdueReturns()
-        ]);
-        setKpis(kpiRes.data);
-        setOverdueReturns(overdueRes.data);
+        const promises = [dashboardAPI.getKPIs()];
+        if (canViewOverdue) {
+          promises.push(dashboardAPI.getOverdueReturns());
+        }
+        
+        const results = await Promise.all(promises);
+        setKpis(results[0].data);
+        if (canViewOverdue && results[1]) {
+          setOverdueReturns(results[1].data);
+        }
       } catch (error) {
         console.error('Failed to fetch dashboard data:', error);
       } finally {
@@ -41,7 +47,7 @@ export default function DashboardPage() {
     };
     
     fetchDashboardData();
-  }, []);
+  }, [canViewOverdue]);
 
   const statCards = [
     {
@@ -142,7 +148,7 @@ export default function DashboardPage() {
       {/* Sub-KPIs and Alerts */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Pending Transfers / Returns Summary */}
-        <Card className="col-span-2 shadow-sm">
+        <Card className={canViewOverdue ? "col-span-2 shadow-sm" : "col-span-3 shadow-sm"}>
           <CardHeader>
             <CardTitle>System Activity</CardTitle>
             <CardDescription>Pending requests that require attention</CardDescription>
@@ -172,54 +178,56 @@ export default function DashboardPage() {
         </Card>
 
         {/* Overdue Returns Alert Panel */}
-        <Card className="col-span-1 border-destructive/20 shadow-sm bg-destructive/5 dark:bg-destructive/10">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center gap-2 text-destructive">
-              <AlertTriangle className="h-5 w-5" />
-              Overdue Returns
-              <Badge variant="destructive" className="ml-auto">
-                {overdueReturns.length}
-              </Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-0">
-            {overdueReturns.length === 0 ? (
-              <div className="p-6 text-center text-sm text-muted-foreground">
-                No overdue returns.
-              </div>
-            ) : (
-              <div className="flex flex-col max-h-[220px] overflow-y-auto">
-                {overdueReturns.map((item) => (
-                  <div key={item.id} className="flex flex-col gap-1 p-4 border-b border-destructive/10 last:border-0 hover:bg-destructive/10 transition-colors">
-                    <div className="flex justify-between items-start">
-                      <span className="font-semibold text-sm truncate pr-2" title={item.asset?.name}>
-                        {item.asset?.name}
-                      </span>
-                      <span className="text-xs font-mono text-destructive shrink-0">
-                        {item.asset?.asset_tag}
-                      </span>
+        {canViewOverdue && (
+          <Card className="col-span-1 border-destructive/20 shadow-sm bg-destructive/5 dark:bg-destructive/10">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-destructive">
+                <AlertTriangle className="h-5 w-5" />
+                Overdue Returns
+                <Badge variant="destructive" className="ml-auto">
+                  {overdueReturns.length}
+                </Badge>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              {overdueReturns.length === 0 ? (
+                <div className="p-6 text-center text-sm text-muted-foreground">
+                  No overdue returns.
+                </div>
+              ) : (
+                <div className="flex flex-col max-h-[220px] overflow-y-auto">
+                  {overdueReturns.map((item) => (
+                    <div key={item.allocation_id} className="flex flex-col gap-1 p-4 border-b border-destructive/10 last:border-0 hover:bg-destructive/10 transition-colors">
+                      <div className="flex justify-between items-start">
+                        <span className="font-semibold text-sm truncate pr-2" title={item.asset_name}>
+                          {item.asset_name}
+                        </span>
+                        <span className="text-xs font-mono text-destructive shrink-0">
+                          {item.asset_tag}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-xs text-muted-foreground mt-1">
+                        <span className="truncate pr-2">Due: {item.expected_return_date ? format(new Date(item.expected_return_date), 'MMM dd, yyyy') : 'N/A'}</span>
+                        <span className="font-medium text-foreground truncate max-w-[100px] text-right" title={item.employee_name}>
+                          {item.employee_name}
+                        </span>
+                      </div>
                     </div>
-                    <div className="flex justify-between items-center text-xs text-muted-foreground mt-1">
-                      <span className="truncate pr-2">Due: {format(new Date(item.expected_return_date), 'MMM dd, yyyy')}</span>
-                      <span className="font-medium text-foreground truncate max-w-[100px] text-right" title={item.user?.full_name}>
-                        {item.user?.full_name}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-            {overdueReturns.length > 0 && (
-              <div className="p-3 border-t border-destructive/10 bg-background/50">
-                <Button variant="ghost" size="sm" className="w-full text-xs text-destructive hover:text-destructive hover:bg-destructive/10" asChild>
-                  <Link to="/allocations">
-                    View All Overdue <ArrowRight className="ml-1 h-3 w-3" />
-                  </Link>
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                  ))}
+                </div>
+              )}
+              {overdueReturns.length > 0 && (
+                <div className="p-3 border-t border-destructive/10 bg-background/50">
+                  <Button variant="ghost" size="sm" className="w-full text-xs text-destructive hover:text-destructive hover:bg-destructive/10" asChild>
+                    <Link to="/allocations">
+                      View All Overdue <ArrowRight className="ml-1 h-3 w-3" />
+                    </Link>
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );

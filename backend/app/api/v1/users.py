@@ -28,10 +28,10 @@ async def list_users(
     limit: int = Query(20, ge=1, le=100),
     department_id: UUID | None = None,
     role: str | None = None,
-    current_user: User = Depends(require_roles(RoleEnum.ADMIN, RoleEnum.ASSET_MANAGER)),
+    current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ):
-    """List all active users. Admin and Asset Manager only."""
+    """List all active users."""
     service = UserService(db)
     users, total = await service.list_users(skip=skip, limit=limit, department_id=department_id, role=role)
     return PaginatedResponse(

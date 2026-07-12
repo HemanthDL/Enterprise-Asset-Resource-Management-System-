@@ -2,14 +2,10 @@ import client from './client';
 
 export const authAPI = {
   signup: (data) => client.post('/auth/signup', data),
-  login: (data) => {
-    const formData = new URLSearchParams();
-    formData.append('username', data.email);
-    formData.append('password', data.password);
-    return client.post('/auth/login', formData, {
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    });
-  },
+  login: (data) => client.post('/auth/login', {
+    email: data.email,
+    password: data.password,
+  }),
   me: () => client.get('/auth/me'),
 };
 
@@ -27,10 +23,10 @@ export const departmentsAPI = {
 };
 
 export const categoriesAPI = {
-  list: (params) => client.get('/categories/', { params }),
-  get: (id) => client.get(`/categories/${id}`),
-  create: (data) => client.post('/categories/', data),
-  update: (id, data) => client.put(`/categories/${id}`, data),
+  list: (params) => client.get('/asset-categories/', { params }),
+  get: (id) => client.get(`/asset-categories/${id}`),
+  create: (data) => client.post('/asset-categories/', data),
+  update: (id, data) => client.put(`/asset-categories/${id}`, data),
 };
 
 export const usersAPI = {
@@ -69,7 +65,7 @@ export const bookingsAPI = {
   list: (params) => client.get('/bookings/', { params }),
   create: (data) => client.post('/bookings/', data),
   cancel: (id) => client.patch(`/bookings/${id}/cancel`),
-  getResourceCalendar: (assetId, params) => client.get(`/bookings/calendar/${assetId}`, { params }),
+  getResourceCalendar: (assetId, params) => client.get(`/bookings/resource/${assetId}`, { params }),
 };
 
 export const maintenanceAPI = {
@@ -87,7 +83,8 @@ export const auditsAPI = {
   createCycle: (data) => client.post('/audits/', data),
   getCycle: (id) => client.get(`/audits/${id}`),
   addAssets: (id, data) => client.post(`/audits/${id}/assets`, data),
-  verifyAsset: (cycleId, itemId, data) => client.patch(`/audits/${cycleId}/assets/${itemId}/verify`, data),
+  listAssetsInCycle: (cycleId) => client.get(`/audits/${cycleId}/assets`),
+  verifyAsset: (cycleId, data) => client.patch(`/audits/${cycleId}/verify`, data),
   closeCycle: (id) => client.patch(`/audits/${id}/close`),
   getDiscrepancies: (id) => client.get(`/audits/${id}/discrepancies`),
 };

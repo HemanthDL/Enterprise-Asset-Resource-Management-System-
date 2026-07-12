@@ -4,7 +4,7 @@ Maintenance routes — raise, approve, reject, assign, start, resolve.
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Body
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_db
@@ -63,7 +63,7 @@ async def get_request(
 @router.patch("/{request_id}/approve", response_model=MaintenanceResponse, summary="Approve")
 async def approve_request(
     request_id: UUID,
-    data: MaintenanceApprovalAction | None = None,
+    data: MaintenanceApprovalAction | None = Body(None),
     current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER)),
     db: AsyncSession = Depends(get_db),
 ):
@@ -77,7 +77,7 @@ async def approve_request(
 @router.patch("/{request_id}/reject", response_model=MaintenanceResponse, summary="Reject")
 async def reject_request(
     request_id: UUID,
-    data: MaintenanceApprovalAction | None = None,
+    data: MaintenanceApprovalAction | None = Body(None),
     current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER)),
     db: AsyncSession = Depends(get_db),
 ):

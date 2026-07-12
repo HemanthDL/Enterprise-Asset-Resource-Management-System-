@@ -44,7 +44,7 @@ export default function DashboardLayout() {
   useEffect(() => {
     // Fetch initial unread count
     notificationsAPI.getUnreadCount()
-      .then(res => setUnreadCount(res.data.count))
+      .then(res => setUnreadCount(res.data.unread_count))
       .catch(console.error);
     
     // Close mobile menu on route change
@@ -68,14 +68,9 @@ export default function DashboardLayout() {
     { name: 'Activity Logs', path: '/activity-logs', icon: Activity, show: isAdmin() },
   ];
 
-  const getInitials = (name) => {
-    if (!name) return 'U';
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase()
-      .substring(0, 2);
+  const getInitials = (firstName, lastName) => {
+    if (!firstName) return 'U';
+    return (firstName[0] + (lastName ? lastName[0] : '')).toUpperCase().substring(0, 2);
   };
 
   return (
@@ -151,7 +146,7 @@ export default function DashboardLayout() {
                 <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                   <Avatar className="h-8 w-8">
                     <AvatarFallback className="bg-primary/10 text-primary">
-                      {getInitials(user?.full_name)}
+                      {getInitials(user?.first_name, user?.last_name)}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
@@ -159,7 +154,9 @@ export default function DashboardLayout() {
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{user?.full_name}</p>
+                    <p className="text-sm font-medium leading-none">
+                      {user?.first_name} {user?.last_name || ''}
+                    </p>
                     <p className="text-xs leading-none text-muted-foreground">
                       {user?.email}
                     </p>

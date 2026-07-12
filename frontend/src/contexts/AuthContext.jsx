@@ -53,12 +53,15 @@ export function AuthProvider({ children }) {
 
   // Role check utilities
   const hasRole = useCallback(
-    (role) => user?.role === role,
+    (role) => user?.role?.toLowerCase() === role?.toLowerCase(),
     [user]
   );
 
   const hasAnyRole = useCallback(
-    (...roles) => roles.includes(user?.role),
+    (...roles) => {
+      const userRole = user?.role?.toLowerCase();
+      return roles.map(r => r?.toLowerCase()).includes(userRole);
+    },
     [user]
   );
 
