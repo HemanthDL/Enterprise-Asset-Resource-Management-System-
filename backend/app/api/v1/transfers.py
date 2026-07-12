@@ -49,7 +49,7 @@ async def request_transfer(
 async def approve_transfer(
     transfer_id: UUID,
     data: TransferApproval | None = Body(None),
-    current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER, RoleEnum.DEPARTMENT_HEAD)),
+    current_user: User = Depends(require_roles(RoleEnum.ADMIN, RoleEnum.ASSET_MANAGER, RoleEnum.DEPARTMENT_HEAD)),
     db: AsyncSession = Depends(get_db),
 ):
     """Approve a transfer request."""
@@ -63,7 +63,7 @@ async def approve_transfer(
 async def reject_transfer(
     transfer_id: UUID,
     data: TransferApproval | None = Body(None),
-    current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER, RoleEnum.DEPARTMENT_HEAD)),
+    current_user: User = Depends(require_roles(RoleEnum.ADMIN, RoleEnum.ASSET_MANAGER, RoleEnum.DEPARTMENT_HEAD)),
     db: AsyncSession = Depends(get_db),
 ):
     """Reject a transfer request."""
@@ -76,7 +76,7 @@ async def reject_transfer(
 @router.patch("/{transfer_id}/complete", response_model=TransferResponse, summary="Complete transfer")
 async def complete_transfer(
     transfer_id: UUID,
-    current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER)),
+    current_user: User = Depends(require_roles(RoleEnum.ADMIN, RoleEnum.ASSET_MANAGER)),
     db: AsyncSession = Depends(get_db),
 ):
     """Complete an approved transfer — re-allocate the asset."""

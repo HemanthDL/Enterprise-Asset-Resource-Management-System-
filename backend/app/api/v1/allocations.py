@@ -36,7 +36,7 @@ async def list_allocations(
 @router.post("", response_model=AllocationResponse, status_code=201, summary="Allocate asset")
 async def allocate_asset(
     data: AllocationCreate,
-    current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER)),
+    current_user: User = Depends(require_roles(RoleEnum.ADMIN, RoleEnum.ASSET_MANAGER)),
     db: AsyncSession = Depends(get_db),
 ):
     """
@@ -52,7 +52,7 @@ async def allocate_asset(
 async def return_asset(
     allocation_id: UUID,
     data: AllocationReturn,
-    current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER)),
+    current_user: User = Depends(require_roles(RoleEnum.ADMIN, RoleEnum.ASSET_MANAGER)),
     db: AsyncSession = Depends(get_db),
 ):
     """Return an allocated asset. Captures condition check-in notes."""

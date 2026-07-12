@@ -64,7 +64,7 @@ async def get_request(
 async def approve_request(
     request_id: UUID,
     data: MaintenanceApprovalAction | None = Body(None),
-    current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER)),
+    current_user: User = Depends(require_roles(RoleEnum.ADMIN, RoleEnum.ASSET_MANAGER)),
     db: AsyncSession = Depends(get_db),
 ):
     """Approve a maintenance request. Asset Manager only."""
@@ -78,7 +78,7 @@ async def approve_request(
 async def reject_request(
     request_id: UUID,
     data: MaintenanceApprovalAction | None = Body(None),
-    current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER)),
+    current_user: User = Depends(require_roles(RoleEnum.ADMIN, RoleEnum.ASSET_MANAGER)),
     db: AsyncSession = Depends(get_db),
 ):
     """Reject a maintenance request. Asset Manager only."""
@@ -92,7 +92,7 @@ async def reject_request(
 async def assign_technician(
     request_id: UUID,
     data: MaintenanceTechnicianAssign,
-    current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER)),
+    current_user: User = Depends(require_roles(RoleEnum.ADMIN, RoleEnum.ASSET_MANAGER)),
     db: AsyncSession = Depends(get_db),
 ):
     """Assign a technician to an approved request. Asset Manager only."""
@@ -104,7 +104,7 @@ async def assign_technician(
 @router.patch("/{request_id}/start", response_model=MaintenanceResponse, summary="Start maintenance")
 async def start_maintenance(
     request_id: UUID,
-    current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER)),
+    current_user: User = Depends(require_roles(RoleEnum.ADMIN, RoleEnum.ASSET_MANAGER)),
     db: AsyncSession = Depends(get_db),
 ):
     """Mark maintenance as in progress. Asset Manager only."""
@@ -117,7 +117,7 @@ async def start_maintenance(
 async def resolve_request(
     request_id: UUID,
     data: MaintenanceResolve,
-    current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER)),
+    current_user: User = Depends(require_roles(RoleEnum.ADMIN, RoleEnum.ASSET_MANAGER)),
     db: AsyncSession = Depends(get_db),
 ):
     """Resolve maintenance. Asset reverts to AVAILABLE. Asset Manager only."""

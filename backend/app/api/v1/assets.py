@@ -50,7 +50,7 @@ async def list_assets(
 @router.post("", response_model=AssetResponse, status_code=201, summary="Register asset")
 async def register_asset(
     data: AssetCreate,
-    current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER)),
+    current_user: User = Depends(require_roles(RoleEnum.ADMIN, RoleEnum.ASSET_MANAGER)),
     db: AsyncSession = Depends(get_db),
 ):
     """Register a new asset. Asset Manager only."""
@@ -75,7 +75,7 @@ async def get_asset(
 async def update_asset(
     asset_id: UUID,
     data: AssetUpdate,
-    current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER)),
+    current_user: User = Depends(require_roles(RoleEnum.ADMIN, RoleEnum.ASSET_MANAGER)),
     db: AsyncSession = Depends(get_db),
 ):
     """Update asset fields. Asset Manager only."""
@@ -88,7 +88,7 @@ async def update_asset(
 async def change_status(
     asset_id: UUID,
     data: AssetStatusChange,
-    current_user: User = Depends(require_roles(RoleEnum.ASSET_MANAGER)),
+    current_user: User = Depends(require_roles(RoleEnum.ADMIN, RoleEnum.ASSET_MANAGER)),
     db: AsyncSession = Depends(get_db),
 ):
     """Change asset lifecycle status with transition validation. Asset Manager only."""
