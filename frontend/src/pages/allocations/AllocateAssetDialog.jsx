@@ -39,7 +39,7 @@ export default function AllocateAssetDialog({ open, onOpenChange, onSuccess }) {
       // Fetch available assets
       assetsAPI.list({ limit: 100 }).then((res) => {
         const available = (res.data.items || []).filter(
-          (a) => a.current_status === 'available'
+          (a) => a.current_status?.toLowerCase() === 'available'
         );
         setAssets(available);
       }).catch(console.error);

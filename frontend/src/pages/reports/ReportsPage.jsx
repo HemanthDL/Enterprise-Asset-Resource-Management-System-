@@ -58,9 +58,9 @@ export default function ReportsPage() {
 
   // Calculate stats
   const totalAssets = assets.length;
-  const allocatedCount = assets.filter((a) => a.current_status === 'allocated').length;
-  const availableCount = assets.filter((a) => a.current_status === 'available').length;
-  const maintenanceCount = assets.filter((a) => a.current_status === 'under_maintenance').length;
+  const allocatedCount = assets.filter((a) => a.current_status?.toLowerCase() === 'allocated').length;
+  const availableCount = assets.filter((a) => a.current_status?.toLowerCase() === 'available').length;
+  const maintenanceCount = assets.filter((a) => a.current_status?.toLowerCase() === 'under_maintenance').length;
   const goodConditionCount = assets.filter((a) => ['new', 'good', 'fair'].includes(a.asset_condition?.toLowerCase())).length;
 
   const utilizationRate = totalAssets > 0 ? Math.round((allocatedCount / totalAssets) * 100) : 0;

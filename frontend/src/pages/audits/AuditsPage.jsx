@@ -172,7 +172,7 @@ export default function AuditsPage() {
       // Filter out assets already added to this cycle
       const currentAssetIds = new Set(cycleAssets.map((a) => a.asset_id));
       const available = (res.data.items || []).filter(
-        (a) => a.current_status !== 'retired' && a.current_status !== 'disposed' && !currentAssetIds.has(a.id)
+        (a) => a.current_status?.toLowerCase() !== 'retired' && a.current_status?.toLowerCase() !== 'disposed' && !currentAssetIds.has(a.id)
       );
       setAvailableAssets(available);
       setTargetAssetIds([]);

@@ -38,7 +38,7 @@ export default function TransferAssetDialog({ open, onOpenChange, onSuccess }) {
       // Fetch allocated assets
       assetsAPI.list({ limit: 100 }).then((res) => {
         const allocated = (res.data.items || []).filter(
-          (a) => a.current_status === 'allocated'
+          (a) => a.current_status?.toLowerCase() === 'allocated'
         );
         setAssets(allocated);
       }).catch(console.error);
